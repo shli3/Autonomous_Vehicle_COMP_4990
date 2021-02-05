@@ -47,7 +47,7 @@ public class SensorFirstIteration : MonoBehaviour
 
         //if the sign sensor collider collides with a sign or the car sensor goes off
         if (rend.material.color == red && other.gameObject.layer == 11 && other.gameObject.tag=="StopSign" && this.gameObject.tag == "firstSensorSign" &&
-           (other.transform.rotation.eulerAngles.y < go.transform.rotation.eulerAngles.y+1 && other.transform.rotation.eulerAngles.y > go.transform.rotation.eulerAngles.y - 1))
+           (other.transform.rotation.eulerAngles.y-1 < go.transform.rotation.eulerAngles.y && other.transform.rotation.eulerAngles.y+1 > go.transform.rotation.eulerAngles.y))
         {
             //is the car at an intersection
             CC.at4Way = true;
