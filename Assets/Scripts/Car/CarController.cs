@@ -13,10 +13,10 @@ public class CarController : MonoBehaviour
     string forwardDirection = "North";
     float forwardDirect = 0;
     //temporary way to chose turns at intersections to be raplaced with gps
-    public int[] decision = { 0, 0, 0, 0 };
+    public int[] decision = { 0, 0, 0, 0, 0, 0 };
     public int index = 0;
     //speed of the turn
-    float waitTime = 0.15f;
+    float waitTime = 0.05f;
     //time for smooth turn
     int x;
 
@@ -34,10 +34,6 @@ public class CarController : MonoBehaviour
 
     //vectors for movement speed and turns
     Vector3 start;
-    Vector3 moveSpeedNorth = new Vector3(0, 0, 0.05f);
-    Vector3 moveSpeedSouth = new Vector3(0, 0, -0.05f);
-    Vector3 moveSpeedEast = new Vector3(0.05f, 0, 0);
-    Vector3 moveSpeedWest = new Vector3(-0.05f, 0, 0);
     Vector3 movementVector = new Vector3(0, 0, 0.05f);
     Vector3 current;
     Vector3 postTurn;
@@ -194,9 +190,13 @@ public class CarController : MonoBehaviour
     private void returnForwardLeft()
     {
         forwardDirect = transform.eulerAngles.y;
-        //Debug.Log(forwardDirect);
+        // Debug.Log(forwardDirect);
 
-        if (forwardDirect <= 90)
+        if (forwardDirect >= -91 && forwardDirect <= -89)
+        {
+            movementVector = new Vector3(-.5f, 0, 0);
+        }
+        else if (forwardDirect <= 90)
         {
             movementVector = new Vector3(0.5f * (forwardDirect / 90), 0, 0.5f - (0.5f * (forwardDirect / 90)));
         }
@@ -208,13 +208,13 @@ public class CarController : MonoBehaviour
         {
             movementVector = new Vector3(0, 0, -0.5f);
         }
-        else if (forwardDirect > 180 && forwardDirect < 270)
+        else if (forwardDirect > 180 && forwardDirect < 269.5f)
         {
             movementVector = new Vector3(-0.5f * ((forwardDirect - 180) / 90), 0, -0.5f * ((forwardDirect - 180) / 90));
         }
-        else if(forwardDirect == 270)
+        else if (forwardDirect <= 271 && forwardDirect >= 269)
         {
-            movementVector = new Vector3(-0.5f, 0,0);
+            movementVector = new Vector3(-0.5f, 0, 0);
         }
         else
         {
@@ -224,12 +224,18 @@ public class CarController : MonoBehaviour
         movementVector = movementVector / 4;
         forward = true;
     }
-   
+
     //decides forward direction after right turn and sets movement vector to fit correct direction.
     private void returnForwardRight()
     {
         forwardDirect = transform.eulerAngles.y;
-        if (forwardDirect <= 90)
+        // Debug.Log(forwardDirect);
+
+        if (forwardDirect >= -91 && forwardDirect <= -89)
+        {
+            movementVector = new Vector3(-.5f, 0, 0);
+        }
+        else if (forwardDirect <= 90)
         {
             movementVector = new Vector3(0.5f * (forwardDirect / 90), 0, 0.5f - (0.5f * (forwardDirect / 90)));
         }
@@ -237,11 +243,11 @@ public class CarController : MonoBehaviour
         {
             movementVector = new Vector3(0.5f - (0.5f * ((forwardDirect - 90) / 90)), 0, -(0.5f * ((forwardDirect - 90) / 90)));
         }
-        else if (forwardDirect > 180 && forwardDirect < 270)
+        else if (forwardDirect > 180 && forwardDirect < 269.5f)
         {
             movementVector = new Vector3(0.5f * ((forwardDirect - 180) / 90), 0, -(0.5f - (0.5f * ((forwardDirect - 180) / 90))));
         }
-        else if (forwardDirect == 270)
+        else if (forwardDirect <= 271 && forwardDirect >= 269)
         {
             movementVector = new Vector3(-0.5f, 0, 0);
         }
