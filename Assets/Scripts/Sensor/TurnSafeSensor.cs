@@ -38,10 +38,15 @@ public class TurnSafeSensor : MonoBehaviour
     //when car sees another car
     void OnTriggerEnter(Collider other)
     {
-        if (CC.decision[CC.index] == 0 && other.gameObject.layer == 8 && this.gameObject.tag == "SafeForward")
+        if (/*CC.decision[CC.index] == 0 &&*/ other.gameObject.layer == 8 && this.gameObject.tag == "SafeForward")
         {
             CC.safeLeft++;
         }
+        if (other.gameObject.layer == 8 && this.gameObject.tag == "SafeIntersection")
+        {
+            CC.safeIntersection++;
+        }
+
     }
 
     //when car hits intersection stop all car sensors from checking more cars. the cars currently seen are those to wait fo at the four way stop
@@ -53,9 +58,22 @@ public class TurnSafeSensor : MonoBehaviour
     //once car is at intersection when all determined cars have left it is time to move.
     private void OnTriggerExit(Collider other)
     {
-        if (CC.decision[CC.index] == 0 && other.gameObject.layer == 8 && CC.atLight == true && this.gameObject.tag == "SafeForward")
+        if (/*CC.decision[CC.index] == 0 &&*/ other.gameObject.layer == 8 && this.gameObject.tag == "SafeForward")
         {
+            Debug.Log("uuuuuuuuuuuuuh");
             CC.safeLeft--;
+            if(CC.safeLeft == 0)
+            {
+                CC.carInIntersectionForward = false;
+            }
+        }
+        if (other.gameObject.layer == 8 && this.gameObject.tag == "SafeIntersection")
+        {
+            CC.safeIntersection--;
+            if (CC.safeIntersection == 0)
+            {
+                CC.carInIntersection = false;
+            }
         }
     }
 }

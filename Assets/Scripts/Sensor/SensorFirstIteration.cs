@@ -9,6 +9,8 @@ public class SensorFirstIteration : MonoBehaviour
     public CarController CC;
     public GameObject go;
     public Renderer rend;
+    public Material greenMat;
+    public Material redMat;
     public Color red = new Color(1f, 0f, 0f, 1f);
     public Color green = new Color(0f, 1f, 0f, 1f);
 
@@ -41,21 +43,25 @@ public class SensorFirstIteration : MonoBehaviour
 
     // When the sensor collides with stop sign
     void OnTriggerEnter(Collider other)
-    {        
+    {
         // Use the renderer to analyse tha color rather than tags, allows more flexibility   
-        rend = other.GetComponent<Renderer>();
+        if (other.gameObject.tag == "StopLight" || other.gameObject.tag == "StopSign")
+        {
+            rend = other.GetComponent<Renderer>();
+        }
 
         //if the sign sensor collider collides with a sign or the car sensor goes off
         if (rend.material.color == red && other.gameObject.layer == 11 && other.gameObject.tag=="StopSign" && this.gameObject.tag == "firstSensorSign" &&
            (other.transform.rotation.eulerAngles.y-1 < go.transform.rotation.eulerAngles.y && other.transform.rotation.eulerAngles.y+1 > go.transform.rotation.eulerAngles.y))
         {
+           // Debug.Log("Hello");
             //is the car at an intersection
             CC.at4Way = true;
             CC.intersection = true;
             CC.forward = false;
             if(CC.carInIntersection == false && CC.carInIntersectionLeft == false && CC.carInIntersectionForward == false && CC.carInIntersectionRight == false)
             {
-               Invoke("turnDecision", 1);
+                Invoke("turnDecision", 2);
             }
         }
 
@@ -77,19 +83,21 @@ public class SensorFirstIteration : MonoBehaviour
             CC.atLight = true;
             CC.intersection = true;
             CC.forward = false;
-            if (CC.decision[CC.index] == 0 && CC.safeLeft == 0)
+            if (CC.decision[CC.index] == 0 && CC.safeLeft == 0 && CC.safeIntersection == 0)
             {
                 CC.left = true;
+                CC.index++;
             }
-            else if (CC.decision[CC.index] == 1)
+            else if (CC.decision[CC.index] == 1 && CC.safeIntersection == 0)
             {
                 CC.forward = true;
+                CC.index++;
             }
-            else if (CC.decision[CC.index] == 2)
+            else if (CC.decision[CC.index] == 2 && CC.safeIntersection == 0)
             {
                 CC.right = true;
+                CC.index++;
             }
-            CC.index++;
         }
 
     }
@@ -97,23 +105,32 @@ public class SensorFirstIteration : MonoBehaviour
     //light change from red to green
     private void OnTriggerStay(Collider other)
     {
-        if (rend.material.color == green && other.gameObject.layer == 10 && other.gameObject.tag == "StopLight" && this.gameObject.tag == "firstSensorLight" && CC.intersection == true &&
+        if (rend.material.color == green && other.gameObject.layer == 10 && other.gameObject.tag == "StopLight" && this.gameObject.tag == "firstSensorLight" && CC.intersection == true && CC.followSafety == false &&
            (other.transform.rotation.eulerAngles.y < go.transform.rotation.eulerAngles.y + 1 && other.transform.rotation.eulerAngles.y > go.transform.rotation.eulerAngles.y - 1))
         {
-            if (CC.decision[CC.index] == 0 && CC.safeLeft==0)
+            // Use the renderer to analyse tha color rather than tags, allows more flexibility   
+            if (other.gameObject.tag == "StopLight" || other.gameObject.tag == "StopSign")
             {
+                rend = other.GetComponent<Renderer>();
+            }
+
+            if (rend.material.color == green && CC.decision[CC.index] == 0 && CC.safeLeft==0 && CC.safeIntersection==0)
+            {
+                Debug.Log("Hello");
                 CC.left = true;
                 CC.index++;
                 CC.intersection = false;
             }
-            else if (CC.decision[CC.index] == 1)
+            else if (rend.material.color == green && CC.decision[CC.index] == 1 && CC.safeIntersection == 0)
             {
+                Debug.Log("Hello");
                 CC.forward = true;
                 CC.index++;
                 CC.intersection = false;
             }
-            else if (CC.decision[CC.index] == 2)
+            else if (rend.material.color == green && CC.decision[CC.index] == 2 && CC.safeIntersection == 0)
             {
+                Debug.Log("Hello");
                 CC.right = true;
                 CC.index++;
                 CC.intersection = false;
@@ -132,6 +149,7 @@ public class SensorFirstIteration : MonoBehaviour
             CC.atLight = false;
             CC.at2Way = false;
             CC.at4Way = false;
+            CC.followSafety = false;
         }
     }
 }

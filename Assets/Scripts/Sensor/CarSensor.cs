@@ -42,6 +42,7 @@ public class CarSensor : MonoBehaviour
         {
             if (this.gameObject.tag == "CarSensorLeft" && other.gameObject.layer == 8)
             {
+                Debug.Log("ye1");
                 CC.carInIntersectionLeft = true;
             }
             if (this.gameObject.tag == "CarSensorForward" && other.gameObject.layer == 8)
@@ -52,8 +53,9 @@ public class CarSensor : MonoBehaviour
             {
                 CC.carInIntersectionRight = true;
             }
-            if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8)
+            if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8 && (CC.at4Way || CC.at2Way))
             {
+                Debug.Log("ye1");
                 CC.carInIntersection = true;
             }
         }
@@ -66,12 +68,13 @@ public class CarSensor : MonoBehaviour
     //when car hits intersection stop all car sensors from checking more cars. the cars currently seen are those to wait fo at the four way stop
     private void OnTriggerStay(Collider other)
     {
-        if (CC.fourWayStopCheck == true && other.gameObject.layer == 8 && CC.intersection == true)
+        if (CC.fourWayStopCheck == true && other.gameObject.layer == 8 && CC.intersection == true && (CC.at4Way || CC.at2Way))
         {
             CC.fourWayStopCheck = false;
         }
-        if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8 && CC.intersection==true)
+        if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8 && CC.intersection==true && (CC.at4Way || CC.at2Way))
         {
+            Debug.Log("ye");
             CC.carInIntersection = true;
         }
     }
@@ -93,13 +96,15 @@ public class CarSensor : MonoBehaviour
             {
                 CC.carInIntersectionRight = false;
             }
-            else if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8)
+            else if (this.gameObject.tag == "CarSensorIntersection" && other.gameObject.layer == 8 && CC.intersection == true && CC.atLight==false)
             {
+                Debug.Log("ye bad");
                 CC.carInIntersection = false;
             }
 
-            if (CC.carInIntersection == false && CC.carInIntersectionLeft == false && CC.carInIntersectionForward == false && CC.carInIntersectionRight == false && CC.intersection==true)
+            if (CC.carInIntersection == false && CC.carInIntersectionLeft == false && CC.carInIntersectionForward == false && CC.carInIntersectionRight == false && CC.intersection==true && CC.atLight == false)
             {
+                Debug.Log("ye3");
                 Invoke("turnDecision", 1);
             }
         }
