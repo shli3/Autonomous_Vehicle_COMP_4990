@@ -3,8 +3,10 @@
 ## Group Members
 
 [Jack McLeod](https://github.com/JFrost17)
+
 [Austin Seguin](https://github.com/Austoboz)
-[Steven Shlimoon)(https://github.com/shli3)
+
+[Steven Shlimoon](https://github.com/shli3)
 
 ## Overview
 
