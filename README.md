@@ -1,4 +1,4 @@
-# Autonomous_Vehicle_COMP_4990
+# Autonomous Vehicle COMP 4990
 
 ## Group Members
 
